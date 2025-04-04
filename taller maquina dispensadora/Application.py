@@ -1,19 +1,24 @@
+import os  # Agregar esta importación
+
 def leerArchivoAccsi(ruta):
     try:
-        with open(ruta, 'r') as archivo:
+        # Obtener la ruta absoluta basada en la ubicación del script
+        ruta_absoluta = os.path.join(os.path.dirname(__file__), ruta)
+        with open(ruta_absoluta, 'r') as archivo:
             contenido = archivo.read()
             return contenido
     except FileNotFoundError:
-        print("El archivo no existe")
+        print(f"El archivo '{ruta}' no existe en la ruta: {ruta_absoluta}")
     except IOError:
         print("Error al leer el archivo")
 
+
 def saludo_cliente():
         print("----------bienvenido a la maquina expendedora TLF------------")
-        print("| primero ingrese las monedas de 1 pesos \n| necesarias para el producro que desea ecoger| \n")
-        imgMaquina = leerArchivoAccsi('maqPixelAscci.txt')
+        print("| primero ingrese las monedas de 1 pesos     | \n| necesarias para el producro que desea escoger| \n")
+        #imgMaquina = leerArchivoAccsi('maquinaDibujo.txt')
         #imgMaquina = leerArchivoAccsi('asc.txt')
-        print(imgMaquina)
+        #print(imgMaquina)
 
 def verificarCredito(actual):
     moneda = "m"
@@ -48,17 +53,16 @@ def comprarProducto(dinero,codigo):
         print("dinero insuficiente")
 def main():
     # saludamos al usuario y le presentamos una imagen accsi de bienvenida
-    print("Hola mundo")
     saludo_cliente()
 
     # verifiquemos que el usuario ingrese el credito suficiente
-    print(leerArchivoAccsi('menu.txt'))
+    print(leerArchivoAccsi('maquinaDibujo.txt'))
     creditos = verificarCredito(0)
     print("su saldo es ", creditos, "$")
 
     #realizar la compra
-    print(leerArchivoAccsi('asc.txt'))
-    print(leerArchivoAccsi('menu.txt'))
+    #print(leerArchivoAccsi('asc.txt'))
+    #print(leerArchivoAccsi('menu.txt'))
     print(f"---------- [ SELECIONE LA LETRA DEL PRODUCTO A COMPRAR, SALDO:  {creditos} $]  -------------")
     codigo = input(":  ")
     comprarProducto(creditos,codigo)
