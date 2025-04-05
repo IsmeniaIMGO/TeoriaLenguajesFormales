@@ -1,11 +1,11 @@
 +-------------------+
-|   Máquina TLF     |
+|   Maquina TLF     |
 |-------------------|
 | [A] Snack   $2    |
 | [B] Bebida  $5    |
 | [C] Dulce   $3    |
-| [D] Café    $7    |
+| [D] Cafe    $7    |
 |-------------------|
 | [ ] [ ] [ ] [ ]   |
-|   Inserte Moneda   |
+|   Inserte Moneda  |
 +-------------------+

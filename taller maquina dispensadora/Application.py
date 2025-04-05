@@ -1,71 +1,89 @@
-import os  # Agregar esta importación
+import os
+#Materia: Teoria de Lenguajes Formales
 
-def leerArchivoAccsi(ruta):
-    try:
-        # Obtener la ruta absoluta basada en la ubicación del script
-        ruta_absoluta = os.path.join(os.path.dirname(__file__), ruta)
-        with open(ruta_absoluta, 'r') as archivo:
-            contenido = archivo.read()
-            return contenido
-    except FileNotFoundError:
-        print(f"El archivo '{ruta}' no existe en la ruta: {ruta_absoluta}")
-    except IOError:
-        print("Error al leer el archivo")
+# Taller de programación: Máquina dispensadora
+
+#Estudiantes:
+# Ismenia Marcela Guevara Ortiz
+# Jhon Sebastian Alzate Andica
 
 
-def saludo_cliente():
-        print("----------bienvenido a la maquina expendedora TLF------------")
-        print("| primero ingrese las monedas de 1 pesos     | \n| necesarias para el producro que desea escoger| \n")
-        #imgMaquina = leerArchivoAccsi('maquinaDibujo.txt')
-        #imgMaquina = leerArchivoAccsi('asc.txt')
-        #print(imgMaquina)
+class MaquinaDispensadora:
 
-def verificarCredito(actual):
-    moneda = "m"
-    print("|+ presione [m] para meter monedas o [x] para terminar +|\npor favor ingrese 1 moneda")
-    credito =0+actual
-    while moneda == "m" or moneda == "x":
-        moneda = input(":  ")
-        if moneda == "m":
-            credito+=1
-            print("su credito es de: ", credito ,"$")
-        else :
-            if moneda == "x":
-                return credito
-    return credito
+    #
+    def __init__(self):
 
-def comprarProducto(dinero,codigo):
-    cambio=0
-    precioProducto=0
-    if codigo == "a":
-        precioProducto = 2
-    if codigo =="b":
-        precioProducto=5
-    if codigo=="c":
-        precioProducto = 3
-    if codigo=="d" :
-        precioProducto =7
-    if dinero-precioProducto >= 0:
-        cambio = dinero-precioProducto
-        print("!Compra exitosa¡")
-        print("su cambio es : ", cambio , "$")
-    else:
-        print("dinero insuficiente")
-def main():
-    # saludamos al usuario y le presentamos una imagen accsi de bienvenida
-    saludo_cliente()
+        self.credito = 0
+        # Definición de productos y precios
+        self.productos = {
+            "A": {"nombre": "Snack", "precio": 2},
+            "B": {"nombre": "Bebida", "precio": 5},
+            "C": {"nombre": "Dulce", "precio": 3},
+            "D": {"nombre": "Café", "precio": 7},
+        }
 
-    # verifiquemos que el usuario ingrese el credito suficiente
-    print(leerArchivoAccsi('maquinaDibujo.txt'))
-    creditos = verificarCredito(0)
-    print("su saldo es ", creditos, "$")
 
-    #realizar la compra
-    #print(leerArchivoAccsi('asc.txt'))
-    #print(leerArchivoAccsi('menu.txt'))
-    print(f"---------- [ SELECIONE LA LETRA DEL PRODUCTO A COMPRAR, SALDO:  {creditos} $]  -------------")
-    codigo = input(":  ")
-    comprarProducto(creditos,codigo)
+    # Método para mostrar el menú de la máquina
+    def mostrar_menu(self):
+        print(self.leer_archivo("maquinaDibujo.txt"))
 
+
+    # Método para leer el archivo de texto
+    def leer_archivo(self,ruta):
+        try:
+            ruta_absoluta = os.path.join(os.path.dirname(__file__), ruta)
+            with open(ruta_absoluta, 'r') as archivo:
+                return archivo.read()
+        except FileNotFoundError:
+            return f"El archivo '{ruta}' no existe."
+        except IOError:
+            return "Error al leer el archivo."
+
+
+    # Método para ingresar monedas
+    def ingresar_monedas(self):
+        print("| Presione [+] para meter monedas |")
+        while True:
+            moneda = input(": ")
+            if moneda == "+":
+                self.credito += 1
+                print(f"Su crédito es de: {self.credito} $")
+            else:
+                break
+
+
+    # Método para seleccionar un producto
+    def seleccionar_producto(self):
+        print(f"\n| SELECCIONE LA LETRA DEL PRODUCTO A COMPRAR, SALDO: {self.credito} $ |")
+        codigo = input(": ").upper()
+        if codigo in self.productos:
+            return codigo
+        else:
+            print("Código inválido. Intente nuevamente.")
+            return self.seleccionar_producto()
+
+    # Método para comprar un producto
+    def comprar_producto(self, codigo):
+        producto = self.productos[codigo]
+        precio = producto["precio"]
+        if self.credito >= precio:
+            self.credito -= precio
+            print(f"¡Compra exitosa! Ha comprado {producto['nombre']}.")
+            print(f"Su cambio es: {self.credito} $")
+            self.credito = 0  # Reiniciar el crédito después de la compra
+        else:
+            print("Dinero insuficiente. Por favor, ingrese más monedas.")
+
+
+    def iniciar(self):
+        self.mostrar_menu()
+        print("\n| Primero ingrese las monedas necesarias para el producto que desea escoger |")
+        self.ingresar_monedas()
+        codigo = self.seleccionar_producto()
+        self.comprar_producto(codigo)
+
+
+# Ejecución del programa
 if __name__ == "__main__":
-    main()
+    maquina = MaquinaDispensadora()
+    maquina.iniciar()
