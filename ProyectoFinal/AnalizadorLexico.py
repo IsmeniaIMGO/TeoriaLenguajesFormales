@@ -57,13 +57,21 @@ token_specs = [
     ('DESCONOCIDO',        r'.'),
 ]
 
+# Compilación de la expresión regular
+# Se utiliza un nombre de grupo para cada token para facilitar la identificación
 token_regex = '|'.join(f'(?P<{name}>{pattern})' for name, pattern in token_specs)
 
+
+# Función para analizar el código y extraer los tokens
+# Se ignoran los espacios en blanco
 def lexer(code):
     tokens = []
+    # Se utiliza re.finditer para encontrar todas las coincidencias de los tokens en el código
     for match in re.finditer(token_regex, code):
+        # Se obtiene el nombre del grupo y el valor del token
         kind = match.lastgroup
         value = match.group()
+        # Se ignoran los espacios en blanco
         if kind == 'ESPACIO_BLANCO':
             continue
         tokens.append((kind, value))
@@ -71,13 +79,15 @@ def lexer(code):
 
 
 # GUI principal
+# Se utiliza tkinter para crear una interfaz gráfica
+# Se utiliza ttk para crear una tabla con los tokens
 def mostrar_tokens_gui(tokens, archivo):
     root = tk.Tk()
     root.title("Analizador Léxico - Tokens")
-    root.geometry("800x500")
+    root.geometry("900x500")
 
     # Etiqueta
-    label = tk.Label(root, text=f"Tokens extraídos de: {archivo}", font=("Arial", 12))
+    label = tk.Label(root, text=f" Clasificación de Tokens ", font=("Arial", 12))
     label.pack(pady=10)
 
     # Tabla
@@ -124,6 +134,8 @@ def mostrar_tokens_gui(tokens, archivo):
 
     }
 
+    # Se insertan los tokens en la tabla
+
     for token_type, value in tokens:
         tree.insert("", "end", values=(token_type, value), tags=(token_type,))
         if token_type in tag_colors:
@@ -131,7 +143,10 @@ def mostrar_tokens_gui(tokens, archivo):
 
     tree.pack(expand=True, fill='both')
 
+    # Botón para cerrar la ventana
     root.mainloop()
+
+
 
 def main():
     tk.Tk().withdraw()  # Ocultar ventana principal
